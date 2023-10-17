@@ -37,7 +37,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/mempool"
 
 	rollconf "github.com/rollkit/rollkit/config"
-	rollconv "github.com/rollkit/rollkit/conv"
 	rollnode "github.com/rollkit/rollkit/node"
 	rollrpc "github.com/rollkit/rollkit/rpc"
 )
@@ -330,11 +329,11 @@ func startInProcess(ctx *Context, clientCtx client.Context, appCreator types.App
 
 		pval := pvm.LoadOrGenFilePV(cfg.PrivValidatorKeyFile(), cfg.PrivValidatorStateFile())
 		// keys in Rollkit format
-		p2pKey, err := rollconv.GetNodeKey(nodeKey)
+		p2pKey, err := rollnode.GetNodeKey(nodeKey)
 		if err != nil {
 			return err
 		}
-		signingKey, err := rollconv.GetNodeKey(&p2p.NodeKey{PrivKey: pval.Key.PrivKey})
+		signingKey, err := rollnode.GetNodeKey(&p2p.NodeKey{PrivKey: pval.Key.PrivKey})
 		if err != nil {
 			return err
 		}
@@ -344,8 +343,8 @@ func startInProcess(ctx *Context, clientCtx client.Context, appCreator types.App
 		if err != nil {
 			return err
 		}
-		rollconv.GetNodeConfig(&nodeConfig, cfg)
-		err = rollconv.TranslateAddresses(&nodeConfig)
+		rollconf.GetNodeConfig(&nodeConfig, cfg)
+		err = rollconf.TranslateAddresses(&nodeConfig)
 		if err != nil {
 			return err
 		}

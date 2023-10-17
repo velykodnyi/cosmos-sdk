@@ -24,7 +24,6 @@ import (
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 
 	rollconf "github.com/rollkit/rollkit/config"
-	rollconv "github.com/rollkit/rollkit/conv"
 	rollnode "github.com/rollkit/rollkit/node"
 	rollrpc "github.com/rollkit/rollkit/rpc"
 )
@@ -45,11 +44,11 @@ func startInProcess(cfg Config, val *Validator) error {
 
 	pval := pvm.LoadOrGenFilePV(tmCfg.PrivValidatorKeyFile(), tmCfg.PrivValidatorStateFile())
 	// keys in Rollkit format
-	p2pKey, err := rollconv.GetNodeKey(nodeKey)
+	p2pKey, err := rollnode.GetNodeKey(nodeKey)
 	if err != nil {
 		return err
 	}
-	signingKey, err := rollconv.GetNodeKey(&p2p.NodeKey{PrivKey: pval.Key.PrivKey})
+	signingKey, err := rollnode.GetNodeKey(&p2p.NodeKey{PrivKey: pval.Key.PrivKey})
 	if err != nil {
 		return err
 	}
@@ -69,8 +68,8 @@ func startInProcess(cfg Config, val *Validator) error {
 	if err != nil {
 		return err
 	}
-	rollconv.GetNodeConfig(&nodeConfig, tmCfg)
-	err = rollconv.TranslateAddresses(&nodeConfig)
+	rollconf.GetNodeConfig(&nodeConfig, tmCfg)
+	err = rollconf.TranslateAddresses(&nodeConfig)
 	if err != nil {
 		return err
 	}
