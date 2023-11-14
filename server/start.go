@@ -24,6 +24,7 @@ import (
 
 	"cosmossdk.io/tools/rosetta"
 	crgserver "cosmossdk.io/tools/rosetta/lib/server"
+	cmtypes "github.com/cometbft/cometbft/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -39,6 +40,7 @@ import (
 	rollconf "github.com/rollkit/rollkit/config"
 	rollnode "github.com/rollkit/rollkit/node"
 	rollrpc "github.com/rollkit/rollkit/rpc"
+	rolltypes "github.com/rollkit/rollkit/types"
 )
 
 const (
@@ -329,14 +331,15 @@ func startInProcess(ctx *Context, clientCtx client.Context, appCreator types.App
 
 		pval := pvm.LoadOrGenFilePV(cfg.PrivValidatorKeyFile(), cfg.PrivValidatorStateFile())
 		// keys in Rollkit format
-		p2pKey, err := rollnode.GetNodeKey(nodeKey)
+		p2pKey, err := rolltypes.GetNodeKey(nodeKey)
 		if err != nil {
 			return err
 		}
-		signingKey, err := rollnode.GetNodeKey(&p2p.NodeKey{PrivKey: pval.Key.PrivKey})
+		signingKey, err := rolltypes.GetNodeKey(&p2p.NodeKey{PrivKey: pval.Key.PrivKey})
 		if err != nil {
 			return err
 		}
+		pubKey := pval.Key.PubKey
 
 		nodeConfig := rollconf.NodeConfig{}
 		err = nodeConfig.GetViperConfig(ctx.Viper)
@@ -348,6 +351,13 @@ func startInProcess(ctx *Context, clientCtx client.Context, appCreator types.App
 		if err != nil {
 			return err
 		}
+
+		genDoc.Validators = []cmtypes.GenesisValidator{{
+			Address: pubKey.Address(),
+			PubKey:  pubKey,
+			Power:   int64(1000),
+			Name:    "Rollkit Sequencer",
+		}}
 
 		tmNode, err := rollnode.NewNode(
 			context.Background(),
