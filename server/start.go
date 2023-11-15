@@ -24,7 +24,6 @@ import (
 
 	"cosmossdk.io/tools/rosetta"
 	crgserver "cosmossdk.io/tools/rosetta/lib/server"
-	cmtypes "github.com/cometbft/cometbft/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -339,7 +338,6 @@ func startInProcess(ctx *Context, clientCtx client.Context, appCreator types.App
 		if err != nil {
 			return err
 		}
-		pubKey := pval.Key.PubKey
 
 		nodeConfig := rollconf.NodeConfig{}
 		err = nodeConfig.GetViperConfig(ctx.Viper)
@@ -351,13 +349,6 @@ func startInProcess(ctx *Context, clientCtx client.Context, appCreator types.App
 		if err != nil {
 			return err
 		}
-
-		genDoc.Validators = []cmtypes.GenesisValidator{{
-			Address: pubKey.Address(),
-			PubKey:  pubKey,
-			Power:   int64(1000),
-			Name:    "Rollkit Sequencer",
-		}}
 
 		tmNode, err := rollnode.NewNode(
 			context.Background(),
