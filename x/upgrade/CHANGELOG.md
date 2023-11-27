@@ -25,6 +25,12 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 ## [Unreleased]
 
+### Improvements
+
+* [#18470](https://github.com/cosmos/cosmos-sdk/pull/18470) Improve go-getter settings.
+
+## [v0.1.0](https://github.com/cosmos/cosmos-sdk/releases/tag/x/upgrade/v0.1.0) - 2023-11-07
+
 ### Features
 
 * [#14880](https://github.com/cosmos/cosmos-sdk/pull/14880) Switch from using gov v1beta1 to gov v1 in upgrade CLIs.
@@ -44,4 +50,4 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 ### Bug Fixes
 
-* [#17421](https://github.com/cosmos/cosmos-sdk/pull/17421) Replace ` BeginBlock` by `PreBlock`. Read [ADR-68](https://github.com/cosmos/cosmos-sdk/blob/main/docs/architecture/adr-068-preblock.md) for more information.
+* [#17421](https://github.com/cosmos/cosmos-sdk/pull/17421) Replace `BeginBlock` by `PreBlock`. Read [ADR-68](https://github.com/cosmos/cosmos-sdk/blob/main/docs/architecture/adr-068-preblock.md) for more information.
