@@ -43,6 +43,7 @@ import (
 	rollconf "github.com/rollkit/rollkit/config"
 	rollnode "github.com/rollkit/rollkit/node"
 	rollrpc "github.com/rollkit/rollkit/rpc"
+	rolltypes "github.com/rollkit/rollkit/types"
 )
 
 const (
@@ -406,12 +407,12 @@ func startCmtNode(
 	pval := pvm.LoadOrGenFilePV(cfg.PrivValidatorKeyFile(), cfg.PrivValidatorStateFile())
 
 	//keys in Rollkit format
-	p2pKey, err := rollnode.GetNodeKey(nodeKey)
+	p2pKey, err := rolltypes.GetNodeKey(nodeKey)
 	if err != nil {
 		return nil, cleanupFn, err
 	}
 
-	signingKey, err := rollnode.GetNodeKey(&p2p.NodeKey{PrivKey: pval.Key.PrivKey})
+	signingKey, err := rolltypes.GetNodeKey(&p2p.NodeKey{PrivKey: pval.Key.PrivKey})
 	if err != nil {
 		return nil, cleanupFn, err
 	}
