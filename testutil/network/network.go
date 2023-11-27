@@ -242,6 +242,7 @@ type (
 		RPCClient  tmclient.Client
 
 		tmNode  rollnode.Node
+		app     servertypes.Application
 		api     *api.Server
 		grpc    *grpc.Server
 		grpcWeb *http.Server
@@ -582,8 +583,7 @@ func New(l Logger, baseDir string, cfg Config) (*Network, error) {
 
 	l.Log("starting test network...")
 	for idx, v := range network.Validators {
-		err := startInProcess(cfg, v)
-		if err != nil {
+		if err := startInProcess(cfg, v); err != nil {
 			return nil, err
 		}
 		l.Log("started validator", idx)
@@ -734,6 +734,12 @@ func (n *Network) Cleanup() {
 			v.grpc.Stop()
 			if v.grpcWeb != nil {
 				_ = v.grpcWeb.Close()
+			}
+		}
+
+		if v.app != nil {
+			if err := v.app.Close(); err != nil {
+				n.Logger.Log("failed to stop validator ABCI application", "err", err)
 			}
 		}
 	}
