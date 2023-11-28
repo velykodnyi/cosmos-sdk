@@ -26,6 +26,7 @@ import (
 	rollconf "github.com/rollkit/rollkit/config"
 	rollnode "github.com/rollkit/rollkit/node"
 	rollrpc "github.com/rollkit/rollkit/rpc"
+	rolltypes "github.com/rollkit/rollkit/types"
 )
 
 func startInProcess(cfg Config, val *Validator) error {
@@ -44,11 +45,11 @@ func startInProcess(cfg Config, val *Validator) error {
 
 	pval := pvm.LoadOrGenFilePV(tmCfg.PrivValidatorKeyFile(), tmCfg.PrivValidatorStateFile())
 	// keys in Rollkit format
-	p2pKey, err := rollnode.GetNodeKey(nodeKey)
+	p2pKey, err := rolltypes.GetNodeKey(nodeKey)
 	if err != nil {
 		return err
 	}
-	signingKey, err := rollnode.GetNodeKey(&p2p.NodeKey{PrivKey: pval.Key.PrivKey})
+	signingKey, err := rolltypes.GetNodeKey(&p2p.NodeKey{PrivKey: pval.Key.PrivKey})
 	if err != nil {
 		return err
 	}
